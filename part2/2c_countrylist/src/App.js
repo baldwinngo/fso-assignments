@@ -7,6 +7,25 @@ const Country = ({ country }) => {
   )
 }
 
+const Display = ({ countryToShow }) => {
+  if (countryToShow.length > 10){
+    console.log(process.env.REACT_APP_API_KEY)
+    return(
+      <p>Too many countries</p>
+    ) 
+  } else {
+    return(
+      countryToShow.map((country) => (
+        <Country country={ country } key={ country.name.common }/>
+      ))
+    )
+  }
+}
+
+const CountryInfo = () => {
+  
+}
+
 const App = () => {
   useEffect(() => {
     axios
@@ -16,17 +35,12 @@ const App = () => {
       })
   }, [])
 
-
   const [country, setCountry] = useState() 
   const [filterCountry, setfilterCountry] = useState([])
   const [showAll, setShowAll] = useState(true)
   const countryToShow = showAll ? [] : filterCountry
+  const api_key = process.env.REACT_APP_API_KEY
 
-  
-
-  if (country) {
-    console.log(country[0].name.common)
-  } 
   const handleFilter = e => {
     if (e.target.value) {
       setShowAll(false)
@@ -45,17 +59,7 @@ const App = () => {
         </div>
       </form>
       <div>
-        {countryToShow.map((country) => {
-          if (country.length > 10){
-            return(
-              <p>Too many countries</p>
-            )
-          } else {
-            return(    
-              <Country country={ country } key={ country.name.common }/>
-            )
-          }
-        })}
+        <Display countryToShow={ countryToShow }/>
       </div>
     </div>
   )
