@@ -1,36 +1,69 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const ShowCountry = ({ apiKey, country }) => {
+  const [buttonClick, setButtonClick] = useState({text: 'show', countryData: {}})
+
+  const handleClick = () => {
+    if (buttonClick.text === 'show'){
+      const newButton = {
+        text: 'hide'
+      }
+      setButtonClick(newButton)
+    } else{
+      const newButton = {
+        text: 'show'
+      }
+      setButtonClick(newButton)
+    }
+  }
+
+  if (buttonClick.text === 'hide'){
+    return(
+      <div>
+        <button onClick={ handleClick }>{ buttonClick.text }</button>
+        <CountryInfo country={ country }/>
+        <CountryWeather apiKey={ apiKey } country={ country }/>
+      </div>
+    )
+  } else{
+    return(
+      <button onClick={ handleClick }>{ buttonClick.text }</button>
+    )
+  }
+  
+}
+
 const Country = ({ country }) => {
   return(
-    <p>{ country.name.common}</p>
+    <p>{ country.name.common }</p>
   )
 }
 
 const CountryWeather = ({ apiKey, country }) => {
   const [weather, setWeather] = useState()
-  const [locationKey, setLocationKey] = useState()
   const resourceBaseKey = 'http://dataservice.accuweather.com/locations/v1/cities/search'
   const resourceQueryKey = `?apikey=${ apiKey }&q=${ country.capital[0] }`
-
   
   useEffect(() => {
     axios
       .get(resourceBaseKey + resourceQueryKey)
       .then(res => {
-        setLocationKey(res.data[0].Key)
-        console.log(res.data, locationKey)
-        return axios.get(`http://dataservice.accuweather.com/currentconditions/v1/${ locationKey }?apikey=${ apiKey }`)
+        return axios.get(`http://dataservice.accuweather.com/currentconditions/v1/${ res.data[0].Key }?apikey=${ apiKey }`)
       })
       .then(res => {
-        console.log(res.data)
+        setWeather(res.data)
       })
   }, [])
-  console.log(locationKey)
 
-  return(
-    <p>hello</p>
-  )
+  if (weather){
+    return(
+      <div>
+        <p>Temperature: { weather[0].Temperature.Imperial.Value } F</p>
+        <p>Weather: {  weather[0].WeatherText }</p>
+      </div>
+    )
+  }
 }
 
 const CountryInfo = ({ country }) => {
@@ -66,20 +99,25 @@ const Display = ({ countryToShow, apiKey }) => {
     )
   } else {
     return(
-      countryToShow.map((country) => (
-        <Country country={ country } key={ country.name.common }/>
-      ))
+      <div>
+        {countryToShow.map((country, i) => {
+          return(
+            <span key={ i }>
+              <Country country={ country } key={ country.name.common }/>
+              <ShowCountry country= { country } apiKey={ apiKey }/>
+            </span>
+          )
+        })}
+      </div>
     )
   }
 }
-
 
 const App = () => {
   useEffect(() => {
     axios
       .get("https://restcountries.com/v3.1/all")
       .then(res => {
-        console.log(res.data)
         setCountry(res.data)
       })
   }, [])
