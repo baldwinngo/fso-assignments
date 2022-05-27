@@ -8,9 +8,7 @@ const Person = ({ persons }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '1234567890' }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [filterPersons, setfilterPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
@@ -31,17 +29,18 @@ const App = () => {
       const newPerson = {name: newName, phone: newPhone}
       setPersons(persons.concat(newPerson))
     }
-    
     setNewName('')
     setNewPhone('')
   }
+
   const handleNewPerson = e => {
     setNewName(e.target.value)
-    
   }
+
   const handleNewPhone = e => {
     setNewPhone(e.target.value)
   }
+
   const handleFilter = e => {
     if (e.target.value) {
       setShowAll(false)
