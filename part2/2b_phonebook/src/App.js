@@ -20,7 +20,7 @@ const App = () => {
 
   useEffect(() => {
     bookService
-      .getAll("http://localhost:3001/persons")
+      .getAll("http://localhost:3001/api/persons")
       .then(phonebook => setPersons(phonebook))
   }, [])
 
