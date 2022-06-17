@@ -1,36 +1,39 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 let persons = [
   { 
     id: 1,
     name: "Arto Hellas", 
-    number: "040-123456"
+    phone: "040-123456"
   },
   { 
     id: 2,
     name: "Ada Lovelace", 
-    number: "39-44-5323523"
+    phone: "39-44-5323523"
   },
   { 
     id: 3,
     name: "Dan Abramov", 
-    number: "12-43-234345"
+    phone: "12-43-234345"
   },
   { 
     id: 4,
     name: "Mary Poppendieck", 
-    number: "39-23-6423122"
+    phone: "39-23-6423122"
   },
   {
     id:5,
     name:"daniel gao",
-    number:"9120348"
+    phone:"9120348"
   }
 ]
 
 app.use(express.json())
+
+app.use(cors())
 
 morgan.token('reqBody', function(req, res) { return JSON.stringify(req.body) })
 
@@ -90,9 +93,9 @@ app.post('/api/persons', (req, res)=> {
   const body = req.body
   console.log(body)
 
-  if(!body.number){
+  if(!body.phone){
     return res.status(400).json({
-      error: 'number missing'
+      error: 'phone missing'
     })
   } else if (!body.name){
     return res.status(400).json({
@@ -107,14 +110,14 @@ app.post('/api/persons', (req, res)=> {
   const person = {
     id: generateId(),
     name: body.name,
-    number: body.number
+    phone: body.phone
   }
 
   persons = persons.concat(person)
   res.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, ()=>{
   console.log(`server running on ${PORT}`)
 })
