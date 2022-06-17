@@ -32,15 +32,17 @@ let persons = [
 
 app.use(express.json())
 
-app.use(morgan(function (tokens, req, res) {
+morgan.token('reqBody', function(req, res) { return JSON.stringify(req.body) })
+
+app.use(morgan(function (tokens, req, res, reqBody) {
   return [
     tokens.method(req, res),
     tokens.url(req, res),
     tokens.status(req, res),
     tokens.res(req, res, 'content-length'), '-',
     tokens['response-time'](req, res), 'ms',
-    tokens.res(req, res)
-  ]
+    tokens['reqBody'](req, res)
+  ].join(' ')
 }))
 
 app.get('/', (req,res) => {
@@ -86,6 +88,7 @@ const generateId = () => {
 app.post('/api/persons', (req, res)=> {
   
   const body = req.body
+  console.log(body)
 
   if(!body.number){
     return res.status(400).json({
