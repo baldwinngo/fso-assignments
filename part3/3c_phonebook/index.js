@@ -43,13 +43,6 @@ app.use(express.static('build'))
 
 morgan.token('reqBody', function(req, res) { return JSON.stringify(req.body) })
 
-app.get('/api/persons', (req, res) => {
-  Person.find({}).then(person => {
-    res.json(person)
-  })
-})
-
-
 app.use(morgan(function (tokens, req, res, reqBody) {
   return [
     tokens.method(req, res),
@@ -72,19 +65,33 @@ app.get('/info', (req,res) => {
   )
 })
 
-// app.get('/api/persons/', (req, res) => {
-//   res.json(persons)
-// }) 
+app.get('/api/persons', (req, res) => {
+  Person.find({}).then(person => {
+    res.json(person)
+  })
+})
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => person.id === id)
+//  const id = Number(req.params.id)
+//  const person = persons.find(person => person.id === id)
 
-  if(person){
-    res.json(person)
-  }else{
-    res.status(404).end()
-  }
+  Person.findById(req.params.id).then(person => {
+    if (person) {
+      res.json(person)
+    } else {
+      res.status(404).end()
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(400).send({ error: 'bad id' })
+  })
+
+//  if(person){
+//    res.json(person)
+//  }else{
+//    res.status(404).end()
+//  }
 }) 
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -106,28 +113,31 @@ app.post('/api/persons', (req, res) => {
   const body = req.body
   console.log(body)
 
-  if(!body.phone){
-    return res.status(400).json({
-      error: 'phone missing'
-    })
-  } else if (!body.name){
-    return res.status(400).json({
-      error: 'name missing'
-    }) 
-  } else if (persons.find(person => person.name === body.name)){
-    return res.status(400).json({
-      error: 'name gotta be unique broski'
-    }) 
-  }
+//  if(!body.phone){
+//    return res.status(400).json({
+//      error: 'phone missing'
+//    })
+//  } else if (!body.name){
+//    return res.status(400).json({
+//      error: 'name missing'
+//    }) 
+//  } else if (persons.find(person => person.name === body.name)){
+//    return res.status(400).json({
+//      error: 'name gotta be unique broski'
+//    }) 
+//  }
 
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     phone: body.phone
-  }
+  })
 
-  persons = persons.concat(person)
-  res.json(person)
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
+
+//  persons = persons.concat(person)
+//  res.json(person)
 })
 
 const PORT = process.env.PORT || 3001
