@@ -5,35 +5,15 @@ const cors = require('cors')
 const Person = require('./models/person')
 const app = express()
 
-// let persons = [
-//   { 
-//     id: 1,
-//     name: "Arto Hellas", 
-//     phone: "040-123456"
-//   },
-//   { 
-//     id: 2,
-//     name: "Ada Lovelace", 
-//     phone: "39-44-5323523"
-//   },
-//   { 
-//     id: 3,
-//     name: "Dan Abramov", 
-//     phone: "12-43-234345"
-//   },
-//   { 
-//     id: 4,
-//     name: "Mary Poppendieck", 
-//     phone: "39-23-6423122"
-//   },
-//   {
-//     id:5,
-//     name:"daniel gao",
-//     phone:"9120348"
-//   }
-// ]
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
 
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  }
 
+  next(error)
+}
 
 app.use(express.json())
 
@@ -54,6 +34,8 @@ app.use(morgan(function (tokens, req, res, reqBody) {
   ].join(' ')
 }))
 
+app.use(errorHandler)
+
 app.get('/', (req,res) => {
   res.send(`Welcome to the backend`)
 })
@@ -71,7 +53,7 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
 //  const id = Number(req.params.id)
 //  const person = persons.find(person => person.id === id)
 
@@ -84,7 +66,7 @@ app.get('/api/persons/:id', (req, res) => {
   })
   .catch(err => {
     console.log(err)
-    res.status(400).send({ error: 'bad id' })
+    next(err)
   })
 
 //  if(person){
