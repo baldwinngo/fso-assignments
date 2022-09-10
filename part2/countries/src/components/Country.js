@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import CountryInfo from './CountryInfo'
 import CountryButton from './CountryButton'
 
-const Country = ({ countries }) => {
+const Country = ({ country, apiKey }) => {
   const [showInfo, setShowInfo] = useState(false)
 
   const handleButton = (e) => {
@@ -11,14 +10,8 @@ const Country = ({ countries }) => {
   }
 
   return (
-    <ul>
-      {countries.map(country => {
-        return (
-          <li key={ country.ccn3 }>{ country.name.common } <CountryButton show={ showInfo } onClick={ handleButton }/>
-          </li>
-        )
-      })}
-    </ul>
+    <li>{ country.name.common } <CountryButton show={ showInfo } onClick={ handleButton } country = { country } apiKey = { apiKey }/>
+    </li>
   )
 }
 

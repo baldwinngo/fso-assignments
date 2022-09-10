@@ -1,7 +1,14 @@
-const CountryButton = ({ show, onClick }) => {
+import CountryInfo from "./CountryInfo"
+import CountryWeather from "./CountryWeather"
+
+const CountryButton = ({ show, onClick, country, apiKey }) => {
   if (show) {
     return (
-      <button onClick={ onClick }>hide</button>
+      <span>
+        <button onClick={ onClick }>hide</button>
+        <CountryInfo country={ country }/>
+        <CountryWeather country={ country } apiKey={ apiKey }/>
+      </span>
     )
   } else {
     return (

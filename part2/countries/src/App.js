@@ -9,6 +9,7 @@ const App = () => {
   const [filteredCountries, setFilteredCountries] = useState([])
   const [showAll, setShowAll] = useState(true)
   const countriesToShow = showAll ? [] : filteredCountries
+  const apiKey = process.env.REACT_APP_API_KEY
 
   const handleCountries = (e) => {
     e.preventDefault()
@@ -21,25 +22,31 @@ const App = () => {
     }
   }
 
-
   const hook = () => {
     axios
       .get('https://restcountries.com/v3.1/all')
       .then(res => {
         setCountries(res.data)
-        console.log(process.env.REACT_APP_API_KEY)
       })
   }
 
   useEffect(hook, [])
-
-  return (
-    <div>
-      <Search onChange={ handleCountries }/>
-      <h2>Countries</h2>
-      <Country countries={ countriesToShow }/>
-    </div>
-  )
+  if (showAll) {
+    return (
+      <div>
+        <Search onChange={ handleCountries }/>
+        <p>too many matches</p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Search onChange={ handleCountries }/>
+        <h2>Countries</h2>
+        {countriesToShow.map(country => <Country country={ country } key={ country.ccn3 } apiKey={ apiKey }/>)}
+      </div>
+    )
+  }
 }
 
 export default App

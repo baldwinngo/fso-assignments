@@ -1,25 +1,20 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+const CountryInfo = ({ country }) => {
+  return(
+    <div>
+      <p>Captial: { country.capital[0] }</p>
+      <p>Area: { country.area }</p>
+      <p>languages:</p>
+      <ul>
+        {Object.values(country.languages).map((languages) => {
+          return(
+            <li key={ languages }>{ languages }</li>
+          )
+          })}
+      </ul>
+      <img src={ country.flags.png } alt={ country.flags.png } />
 
-const CountryInfo = ({ country, show }) => {
-  const [countryInfo, setCountryInfo] = useState([])
-
-  const hook = () => {
-    axios
-      .get('https://restcountries.com/v3.1/all')
-      .then(res => {
-        setCountryInfo(res.data)
-        console.log(process.env.REACT_APP_API_KEY)
-      })
-  }
-
-  useEffect(hook, [])
-
-  if (show) {
-    return (
-      <p>hello</p>
-    )
-  }
+    </div>
+  )
 }
 
 export default CountryInfo
