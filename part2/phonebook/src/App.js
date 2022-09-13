@@ -21,17 +21,17 @@ const App = () => {
 
   useEffect(hook, [])
 
-  const handleNewName = (e) => {
+  const handleNewName = e => {
     e.preventDefault()
     setNewName(e.target.value)
   } 
 
-  const handleNewNumber = (e) => {
+  const handleNewNumber = e => {
     e.preventDefault()
     setNewNumber(e.target.value)
   } 
 
-  const handleFilter = (e) => {
+  const handleFilter = e => {
     e.preventDefault()
 
     if (e.target.value) {
@@ -43,7 +43,7 @@ const App = () => {
     setFilteredPersons(persons.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase())))
   }
 
-  const addNewPerson = (e) => {
+  const addNewPerson = e => {
     e.preventDefault()
     
     if (persons.find(person => newName === person.name)) {
@@ -65,6 +65,14 @@ const App = () => {
     }
   }
 
+  const handleDelete = id => {
+    phoneService
+      .deletePerson(id)
+      .then(person => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+  } 
+
 
 
   return (
@@ -82,7 +90,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {personsToShow.map(person => <li key={ person.name }>{ person.name } - { person.number }</li>)}
+        {personsToShow.map(person => <li key={ person.name }>{ person.name } - { person.number } <button onClick={() => handleDelete(person.id) }>delete</button></li>)}
       </ul>
     </div>
   )
