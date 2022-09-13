@@ -10,6 +10,16 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
   const personsToShow = showAll ? persons : filteredPersons
 
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(res => {
+        setPersons(res.data)
+      })
+  }
+
+  useEffect(hook, [])
+
   const handleNewName = (e) => {
     e.preventDefault()
     setNewName(e.target.value)
@@ -44,22 +54,18 @@ const App = () => {
         number: newNumber
       }
 
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(res => {
+          console.log(res)
+          setPersons(persons.concat(res.data))
+          setNewName('')
+        setNewNumber('')
+        })
     }
-    
   }
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(res => {
-        setPersons(res.data)
-      })
-  }
 
-  useEffect(hook, [])
 
   return (
     <div>
