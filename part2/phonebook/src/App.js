@@ -45,16 +45,26 @@ const App = () => {
 
   const addNewPerson = e => {
     e.preventDefault()
+
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
     
     if (persons.find(person => newName === person.name)) {
-      alert(`${ newName } is already in the phonebook`)
-    } else {
-
-      const personObject = {
-        name: newName,
-        number: newNumber
+      if (window.confirm(`${ newName } is already in the phonebook, would you like to replace?`)) {
+        let oldPerson = persons.find(person => person.name === newName)
+        let index = persons.findIndex(person => person.name === newName)
+        phoneService 
+          .update(oldPerson.id, personObject)
+          .then(person => {
+            console.log(index)
+            setPersons(persons.splice(index, index, person))
+            setNewName('')
+            setNewNumber('')
+          })
       }
-
+    } else {
       phoneService
         .create(personObject)
         .then(person => {
@@ -66,11 +76,16 @@ const App = () => {
   }
 
   const handleDelete = id => {
-    phoneService
+    let person = persons.find(person => person.id === id)
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phoneService
       .deletePerson(id)
       .then(person => {
         setPersons(persons.filter(person => person.id !== id))
       })
+    }
+
   } 
 
 
@@ -90,7 +105,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {personsToShow.map(person => <li key={ person.name }>{ person.name } - { person.number } <button onClick={() => handleDelete(person.id) }>delete</button></li>)}
+        {personsToShow.map(person => <li key={ person.id }>{ person.name } - { person.number } <button onClick={() => handleDelete(person.id) }>delete</button></li>)}
       </ul>
     </div>
   )
