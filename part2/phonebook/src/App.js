@@ -53,13 +53,11 @@ const App = () => {
     
     if (persons.find(person => newName === person.name)) {
       if (window.confirm(`${ newName } is already in the phonebook, would you like to replace?`)) {
-        let oldPerson = persons.find(person => person.name === newName)
-        let index = persons.findIndex(person => person.name === newName)
+        const updatePerson = persons.find(person => person.name === newName)
         phoneService 
-          .update(oldPerson.id, personObject)
+          .update(updatePerson.id, personObject)
           .then(person => {
-            console.log(index)
-            setPersons(persons.splice(index, index, person))
+            setPersons(persons.map(person => person.id !== updatePerson.id ? person : personObject)) 
             setNewName('')
             setNewNumber('')
           })
