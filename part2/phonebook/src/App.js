@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import phoneService from './services/phonebook'
 
 const App = () => {
@@ -12,10 +11,10 @@ const App = () => {
   const personsToShow = showAll ? persons : filteredPersons
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(res => {
-        setPersons(res.data)
+    phoneService
+      .getAll()
+      .then(person => {
+        setPersons(person)
       })
   }
 
