@@ -7,6 +7,8 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
+
+
 const url = `mongodb+srv://baldwin:${password}@cluster0.yvb88kd.mongodb.net/noteApp?retryWrites=true&w=majority`
 
 const noteSchema = new mongoose.Schema({
@@ -19,26 +21,26 @@ const Note = mongoose.model('Note', noteSchema)
 
 mongoose
   .connect(url)
-  // .then((result) => {
-  //   console.log('connected')
+  .then((result) => {
+    console.log('connected')
 
-  //   const note = new Note({
-  //     content: 'nippon is only a couple months away',
-  //     date: new Date(),
-  //     important: true,
-  //   })
-
-  //   return note.save()
-  // })
-  // .then(() => {
-  //   console.log('note saved!')
-  //   return mongoose.connection.close()
-  // })
-  // .catch((err) => console.log(err))
-
-  Note.find({}).then(result => {
-    result.forEach(note => {
-      console.log(note)
+    const note = new Note({
+      content: 'nippon is only a couple months away',
+      date: new Date(),
+      important: true,
     })
-    mongoose.connection.close()
+
+    return note.save()
   })
+  .then(() => {
+    console.log('note saved!')
+    return mongoose.connection.close()
+  })
+  .catch((err) => console.log(err))
+
+  // Note.find({}).then(result => {
+  //   result.forEach(note => {
+  //     console.log(note)
+  //   })
+  //   mongoose.connection.close()
+  // })
