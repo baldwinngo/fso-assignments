@@ -9,7 +9,8 @@
     "dev": "nodemon index.js",
     "deploy": "flyctl deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "flyctl logs"
+    "logs:prod": "flyctl logs",
+    "lint": "eslint ."
   },
   "author": "Baldwin",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "mongoose": "^6.6.1"
   },
   "devDependencies": {
+    "eslint": "^8.24.0",
     "nodemon": "^2.0.20"
   }
 }
