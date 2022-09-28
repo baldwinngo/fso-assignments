@@ -3,8 +3,6 @@ const config = require('../utils/config');
 
 const mongoUrl = config.MONGO_URI;
 
-console.log(mongoUrl, typeof mongoUrl)
-
 mongoose.connect(mongoUrl)
   .then(() => {
     console.log('connected to MongoDB');
