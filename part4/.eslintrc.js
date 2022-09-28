@@ -10,7 +10,8 @@ module.exports = {
         'linebreak-style': [
             'error',
             'windows'
-        ]
+        ],
+        'no-console': 0
     }
 }
 
