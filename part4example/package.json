@@ -28,6 +28,6 @@
     "supertest": "^6.2.4"
   },
   "jest": {
-    "test-environment": "node"
+    "testEnvironment": "node"
   }
 }
