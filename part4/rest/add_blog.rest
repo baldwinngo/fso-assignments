@@ -2,8 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Manga shops in Tokyo",
+  "title": "Top Hokkaido Sushi Restaurants",
   "author": "Monke",
-  "url": "cdawgva.com",
-  "likes": 34
+  "url": "cdawgva.com"
 }

@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/6334b5e9d10e9eb11b22f980
+Content-Type: application/json
+
+{
+  "title": "Manga shops in Tokyo",
+  "author": "Monke",
+  "url": "cdawgva.com",
+  "likes": 99
+}
