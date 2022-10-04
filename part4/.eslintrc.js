@@ -11,7 +11,8 @@ module.exports = {
             'error',
             'windows'
         ],
-        'no-console': 0
+        'no-console': 0,
+        'no-underscore-dangle': 0,
     }
 }
 

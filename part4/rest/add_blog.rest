@@ -2,7 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Top Hokkaido Sushi Restaurants",
+  "title": "Japan cities for cherry blossom season",
   "author": "Monke",
-  "url": "cdawgva.com"
+  "url": "cdawgva.com",
+  "userId": "633b821125893285163e952c"
 }
