@@ -3,14 +3,6 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1 });
   response.json(blogs);
@@ -18,8 +10,7 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const blogBody = request.body;
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
@@ -57,8 +48,25 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(401).json({ error: 'only the original user can delete' });
+  }
+
   await Blog.findByIdAndRemove(request.params.id);
+
+  const user = await User.findById(decodedToken.id);
+  user.blogs = Blog.find({ user: blog.user });
   response.status(204).end();
+
+  return false;
 });
 
 blogsRouter.put('/:id', (request, response, next) => {

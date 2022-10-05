@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFub3RoZXJPbmUiLCJpZCI6IjYzM2I4MjExMjU4OTMyODUxNjNlOTUyYyIsImlhdCI6MTY2NDkyOTMxMiwiZXhwIjoxNjY0OTMyOTEyfQ.H1kdLrMdHlkjKkG3VgR-UIrNiAy1QUNZlk2eEtaAW7c
 
 {
-  "title": "Japan cities for cherry blossom season",
+  "title": "Visiting Osaka",
   "author": "Monke",
   "url": "cdawgva.com",
   "userId": "633b821125893285163e952c"

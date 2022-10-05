@@ -25,14 +25,27 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message });
   }
+  if (error.name === 'JsonWebTokenError') {
+    return response.status(400).json({ error: request.token });
+  }
 
   next(error);
 
   return response.status(400).send({ error: 'unknown error' });
 };
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    request.token = authorization.substring(7);
+  }
+
+  next();
+};
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
 };
