@@ -1,5 +1,7 @@
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 const logger = require('./logger');
+const User = require('../models/user');
 
 const requestLogger = morgan((tokens, req, res) => (
   [
@@ -43,9 +45,30 @@ const tokenExtractor = (request, response, next) => {
   next();
 };
 
+const userExtractor = async (request, response, next) => {
+  const userToken = request.token;
+
+  if (!userToken) {
+    return response.status(401).json({ error: 'token missing' });
+  }
+
+  const userDecodedToken = jwt.verify(userToken, process.env.SECRET);
+
+  if (!userDecodedToken) {
+    return response.status(401).json({ error: 'invalid token' });
+  }
+
+  request.user = await User.findById(userDecodedToken.id);
+
+  next();
+
+  return false;
+};
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };

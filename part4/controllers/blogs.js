@@ -20,7 +20,7 @@ blogsRouter.post('/', async (request, response) => {
     blogBody.likes = 0;
   }
 
-  const user = await User.findById(blogBody.userId);
+  const { user } = request;
 
   const blog = new Blog({
     title: blogBody.title,
@@ -62,7 +62,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   await Blog.findByIdAndRemove(request.params.id);
 
-  const user = await User.findById(decodedToken.id);
+  const { user } = request;
   const blogsAfterDelete = await Blog.find({ user: blog.user });
   user.blogs = blogsAfterDelete.map((b) => b._id);
   await user.save();
