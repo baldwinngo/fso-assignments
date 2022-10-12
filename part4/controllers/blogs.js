@@ -21,18 +21,24 @@ blogsRouter.post('/', async (request, response) => {
 
   const { user } = request;
 
-  const blog = new Blog({
-    title: blogBody.title,
-    author: blogBody.author,
-    url: blogBody.url,
-    likes: blogBody.likes,
-    user: user._id,
-  });
+  if (!user._id) {
+    return response.status(401).json({ error: 'id missing' });
+  }
 
-  const savedBlog = await blog.save();
-  user.blogs = user.blogs.concat(savedBlog._id);
-  await user.save();
-  response.status(201).json(savedBlog);
+  response.status(201).json(user.name);
+
+  // const blog = new Blog({
+  //   title: blogBody.title,
+  //   author: blogBody.author,
+  //   url: blogBody.url,
+  //   likes: blogBody.likes,
+  //   user: user._id,
+  // });
+
+  // const savedBlog = await blog.save();
+  // user.blogs = user.blogs.concat(savedBlog._id);
+  // await user.save();
+  // response.status(201).json(savedBlog);
 
   return false;
 });
